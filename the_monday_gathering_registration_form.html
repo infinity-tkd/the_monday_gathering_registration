@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="km" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Monday Gathering | Infinity Taekwondo</title>
+    
+    <!-- Google Fonts: Montserrat & Suwannaphum -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Suwannaphum:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'Suwannaphum', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#E53935', // Red Primary
+                        primaryDark: '#B71C1C',
+                        secondary: '#000000', // Black Secondary
+                        surface: '#F8F9FA', // Premium Light background
+                        surfaceDark: '#0A0A0A', // Deep Dark background
+                        cardDark: '#141414', // Slightly lighter dark for cards
+                        inputDark: '#1E1E1E'
+                    },
+                    borderRadius: {
+                        'custom': '5px' // Strict 5px rule
+                    },
+                    boxShadow: {
+                        'premium': '0 10px 40px -10px rgba(0,0,0,0.08)',
+                        'premium-dark': '0 10px 40px -10px rgba(0,0,0,0.5)',
+                        'glow': '0 0 0 3px rgba(229, 57, 53, 0.2)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(229, 57, 53, 0.5); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #E53935; }
+
+        /* Smooth Transitions */
+        body { transition: background-color 0.4s ease, color 0.4s ease; }
+        
+        /* Premium Input Styling */
+        .secure-input-group {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .secure-input {
+            width: 100%;
+            border: 1px solid #E5E7EB;
+            background-color: #FFFFFF;
+            padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+            border-radius: 5px !important;
+            color: #111827;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .dark .secure-input {
+            border-color: #333333;
+            background-color: #1E1E1E;
+            color: #F9FAFB;
+        }
+        
+        /* Focus & Hover states */
+        .secure-input:hover { border-color: #D1D5DB; }
+        .dark .secure-input:hover { border-color: #4B5563; }
+        
+        .secure-input:focus {
+            outline: none;
+            border-color: #E53935;
+            box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.15);
+        }
+        
+        /* Icons positioning */
+        .input-icon-left {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+            transition: color 0.3s ease;
+            pointer-events: none;
+            font-size: 1.1rem;
+        }
+        .secure-input:focus ~ .input-icon-left { color: #E53935; }
+        
+        .validation-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            font-size: 1.2rem;
+        }
+        .validation-icon.show {
+            opacity: 1;
+            transform: translateY(-50%) scale(1);
+        }
+        .validation-icon.hide {
+            transform: translateY(-50%) scale(0.5);
+        }
+
+        /* Checkbox Premium CSS ONLY */
+        input[type="checkbox"] {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #D1D5DB;
+            border-radius: 4px !important;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            background-color: transparent;
+            flex-shrink: 0;
+        }
+        .dark input[type="checkbox"] { border-color: #4B5563; }
+        
+        input[type="checkbox"]:checked {
+            background-color: #E53935;
+            border-color: #E53935;
+        }
+        input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        /* Glassmorphism Header */
+        .glass-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .dark .glass-header {
+            background: rgba(10, 10, 10, 0.8);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Enforce 5px Rule */
+        button, .file-drop-area, select, .premium-card {
+            border-radius: 5px !important;
+        }
+
+        /* File Area Animation */
+        .file-drop-area { transition: all 0.3s ease; }
+        .file-drop-area:hover { border-color: #E53935; background: rgba(229, 57, 53, 0.02); }
+        .file-drop-area.dragover { border-color: #E53935; background: rgba(229, 57, 53, 0.08); transform: scale(1.02); }
+        
+        /* Auto-fill fix for dark mode */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active{
+            -webkit-box-shadow: 0 0 0 30px white inset !important;
+        }
+        .dark input:-webkit-autofill,
+        .dark input:-webkit-autofill:hover, 
+        .dark input:-webkit-autofill:focus, 
+        .dark input:-webkit-autofill:active{
+            -webkit-box-shadow: 0 0 0 30px #1E1E1E inset !important;
+            -webkit-text-fill-color: white !important;
+        }
+
+        .loader {
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid #ffffff;
+            border-radius: 50% !important;
+            width: 18px;
+            height: 18px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Button Disabled State Glow Override */
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        button:disabled .absolute.inset-0 {
+            display: none; /* Hide hover shimmer when disabled */
+        }
+    </style>
+</head>
+<body class="bg-surface text-gray-900 dark:bg-surfaceDark dark:text-gray-100 min-h-screen antialiased flex flex-col">
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 glass-header">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 group cursor-pointer">
+                <div class="w-10 h-10 bg-primary flex items-center justify-center text-white font-black text-xl rounded-custom shadow-md group-hover:bg-primaryDark transition-colors">
+                    IT
+                </div>
+                <h1 class="font-bold text-lg sm:text-xl hidden sm:block tracking-widest text-secondary dark:text-white uppercase">Infinity <span class="font-light text-primary">Taekwondo</span></h1>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <select id="langSelect" class="bg-transparent border border-gray-200 dark:border-gray-800 text-sm py-1.5 px-3 focus:ring-1 focus:ring-primary focus:border-primary outline-none cursor-pointer dark:bg-cardDark font-medium transition-colors hover:border-gray-300 dark:hover:border-gray-600 shadow-sm">
+                    <option value="km">ខ្មែរ</option>
+                    <option value="en">English</option>
+                    <option value="zh">中文</option>
+                </select>
+
+                <button id="themeToggle" class="w-10 h-10 flex items-center justify-center bg-white border border-gray-200 dark:border-gray-800 dark:bg-cardDark hover:shadow-md transition-all rounded-custom shadow-sm" aria-label="Toggle Theme">
+                    <i class="ph-fill ph-moon text-gray-700 text-xl dark:hidden"></i>
+                    <i class="ph-fill ph-sun text-yellow-500 text-xl hidden dark:block"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-28 pb-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
+        
+        <!-- Hero Section -->
+        <div class="text-center mb-12 transform transition-all duration-700 translate-y-0 opacity-100">
+            <div class="inline-flex items-center bg-red-100 dark:bg-red-900/30 text-primary dark:text-red-400 px-4 py-1.5 rounded-custom text-xs font-bold tracking-wider mb-4 uppercase">
+                <i class="ph-fill ph-lightning mr-1.5 text-sm"></i> <span data-i18n="badge_hub">Weekly Training Hub</span>
+            </div>
+            <h2 class="text-3xl md:text-5xl font-black text-secondary dark:text-white mb-2 tracking-tight" data-i18n="title">វេទិកាថ្ងៃចន្ទ</h2>
+            <h3 class="text-xl md:text-2xl font-semibold mb-6 text-primary" data-i18n="subtitle">The Monday Gathering</h3>
+            <p class="text-gray-500 dark:text-gray-400 leading-relaxed text-sm md:text-base mx-auto max-w-2xl" data-i18n="intro">
+                សូមស្វាគមន៍មកកាន់ វេទិកាថ្ងៃចន្ទ! នេះគឺជាកម្មវិធីហ្វឹកហាត់បច្ចេកទេសតេក្វាន់ដូកម្រិតខ្ពស់ប្រចាំសប្តាហ៍ ផ្តោតលើ Poomsae, Demonstration, និង Tricking រៀបចំដោយ Infinity Taekwondo។ តោះមកចូលរួមជាមួយពួកយើង ដើម្បីស្វែងយល់ពីភាពល្អឥតខ្ចោះនៃសិល្បៈតេក្វាន់ដូទំនើបទាំងអស់គ្នា!
+            </p>
+        </div>
+
+        <!-- Form Card (Premium Design) -->
+        <div class="premium-card bg-white dark:bg-cardDark shadow-premium dark:shadow-premium-dark border border-gray-100 dark:border-gray-800 relative overflow-hidden">
+            <!-- Top Red Accent Line -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-red-400"></div>
+
+            <form id="registrationForm" class="p-6 md:p-10" novalidate>
+                
+                <!-- Section 1: Personal Information -->
+                <div class="mb-12">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 rounded-custom bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-primary">
+                            <i class="ph-fill ph-shield-check text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-secondary dark:text-white" data-i18n="sec1_title">១. ព័ត៌មានផ្ទាល់ខ្លួន | Personal Info</h4>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Khmer Name -->
+                        <div class="form-group">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wider" data-i18n="lbl_name_km">ឈ្មោះពេញ ជាភាសាខ្មែរ *</label>
+                            <div class="secure-input-group">
+                                <input type="text" id="nameKh" required class="secure-input" data-i18n-placeholder="plh_name_km" placeholder="កែវ មុនី">
+                                <i class="ph ph-user input-icon-left"></i>
+                                <i class="ph-fill ph-check-circle text-green-500 validation-icon" id="icon-nameKh"></i>
+                            </div>
+                            <span class="error-msg text-primary text-xs mt-1.5 hidden font-medium flex items-center gap-1" id="err-nameKh"><i class="ph-fill ph-warning-circle"></i> <span data-i18n="err_name_km">សូមបញ្ចូលឈ្មោះជាភាសាខ្មែរ។</span></span>
+                        </div>
+
+                        <!-- English Name -->
+                        <div class="form-group">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wider" data-i18n="lbl_name_en">Full Name in English *</label>
+                            <div class="secure-input-group">
+                                <input type="text" id="nameEn" required class="secure-input" data-i18n-placeholder="plh_name_en" placeholder="Keo Moni">
+                                <i class="ph ph-identification-card input-icon-left"></i>
+                                <i class="ph-fill ph-check-circle text-green-500 validation-icon" id="icon-nameEn"></i>
+                            </div>
+                            <span class="error-msg text-primary text-xs mt-1.5 hidden font-medium flex items-center gap-1" id="err-nameEn"><i class="ph-fill ph-warning-circle"></i> <span data-i18n="err_name_en">Please enter your English name.</span></span>
+                        </div>
+
+                        <!-- Email (Strict Validation) -->
+                        <div class="form-group">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wider" data-i18n="lbl_email">អ៊ីមែល / Email *</label>
+                            <div class="secure-input-group">
+                                <input type="email" id="email" required class="secure-input" placeholder="athlete@example.com">
+                                <i class="ph ph-envelope-simple input-icon-left"></i>
+                                <i class="ph-fill ph-check-circle text-green-500 validation-icon" id="icon-email"></i>
+                            </div>
+                            <span class="error-msg text-primary text-xs mt-1.5 hidden font-medium flex items-center gap-1" id="err-email"><i class="ph-fill ph-warning-circle"></i> <span data-i18n="err_email">Please enter a valid email.</span></span>
+                        </div>
+
+                        <!-- Phone (Numbers Only, specific length) -->
+                        <div class="form-group">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wider" data-i18n="lbl_phone">លេខទូរស័ព្ទ / Phone *</label>
+                            <div class="secure-input-group">
+                                <input type="tel" id="phone" required class="secure-input font-mono" data-i18n-placeholder="plh_phone" placeholder="012 345 678" maxlength="15">
+                                <i class="ph ph-phone input-icon-left"></i>
+                                <i class="ph-fill ph-check-circle text-green-500 validation-icon" id="icon-phone"></i>
+                            </div>
+                            <span class="error-msg text-primary text-xs mt-1.5 hidden font-medium flex items-center gap-1" id="err-phone"><i class="ph-fill ph-warning-circle"></i> <span data-i18n="err_phone">Valid phone number required.</span></span>
+                        </div>
+
+                        <!-- DOB (Date Picker Restricted) -->
+                        <div class="form-group md:col-span-2">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wider" data-i18n="lbl_dob">ថ្ងៃខែឆ្នាំកំណើត / Date of Birth *</label>
+                            <div class="secure-input-group md:w-1/2">
+                                <input type="date" id="dob" required class="secure-input cursor-pointer">
+                            </div>
+                            <span class="error-msg text-primary text-xs mt-1.5 hidden font-medium flex items-center gap-1" id="err-dob"><i class="ph-fill ph-warning-circle"></i> <span data-i18n="err_dob">Please select a valid birth date.</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: TKD Background -->
+                <div class="mb-12">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 rounded-custom bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-primary">
+                            <i class="ph-fill ph-star text-xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-secondary dark:text-white" data-i18n="sec2_title">២. ព័ត៌មានតេក្វាន់ដូ | TKD Background</h4>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-group">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wider" data-i18n="lbl_club">ក្លឹបបច្ចុប្បន្ន / Current Club *</label>
+                            <div class="secure-input-group">
+                                <input type="text" id="club" required class="secure-input" data-i18n-placeholder="plh_club" placeholder="e.g. Infinity Taekwondo">
+                                <i class="ph ph-buildings input-icon-left"></i>
+                                <i class="ph-fill ph-check-circle text-green-500 validation-icon" id="icon-club"></i>
+                            </div>
+                            <span class="error-msg text-primary text-xs mt-1.5 hidden font-medium flex items-center gap-1" id="err-club"><i class="ph-fill ph-warning-circle"></i> <span data-i18n="err_club">Please enter your club.</span></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 uppercase tracking-wider flex justify-between">
+                                <span data-i18n="lbl_telegram">គណនី Telegram *</span>
+                                <span class="text-[10px] text-gray-400 font-normal normal-case" data-i18n="lbl_telegram_hint">(For Group Invite)</span>
+                            </label>
+                            <div class="secure-input-group">
+                                <input type="text" id="telegram" required class="secure-input font-mono" placeholder="@username">
+                                <i class="ph-fill ph-telegram-logo input-icon-left text-blue-500"></i>
+                                <i class="ph-fill ph-check-circle text-green-500 validation-icon" id="icon-telegram"></i>
+                            </div>
+                            <span class="error-msg text-primary text-xs mt-1.5 hidden font-medium flex items-center gap-1" id="err-telegram"><i class="ph-fill ph-warning-circle"></i> <span data-i18n="err_telegram">Please enter your Telegram username.</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Payment -->
+                <div class="mb-12 bg-gray-50 dark:bg-inputDark p-6 border border-gray-200 dark:border-gray-800 rounded-custom relative shadow-inner">
+                    <div class="absolute top-0 right-0 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-bl-custom rounded-tr-custom uppercase tracking-wider" data-i18n="badge_secure">
+                        Secure Payment
+                    </div>
+                    <h4 class="text-lg font-bold text-secondary dark:text-white mb-2 flex items-center gap-2">
+                        <i class="ph ph-qr-code text-primary text-2xl"></i> <span data-i18n="sec3_title">៣. ការបង់ប្រាក់ | Payment</span>
+                    </h4>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-6" data-i18n="sec3_desc">
+                        ថ្លៃចូលរួម៖ <strong class="text-primary">៥,០០០ រៀល/អ្នក</strong>។ សូមស្កេន KHQR រួចបង្ហោះបង្កាន់ដៃ។
+                    </p>
+                    
+                    <div class="flex flex-col md:flex-row gap-8 items-start">
+                        <!-- Mock KHQR Area -->
+                        <div class="w-36 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-custom p-3 shadow-md shrink-0 mx-auto md:mx-0 flex flex-col items-center group">
+                            <div class="w-full aspect-square border-2 border-primary border-dashed rounded-[3px] flex items-center justify-center bg-red-50 dark:bg-red-900/10 mb-2 relative overflow-hidden group-hover:border-solid transition-all">
+                                <i class="ph ph-qr-code text-5xl text-gray-800 dark:text-gray-200 group-hover:scale-110 transition-transform"></i>
+                                <!-- Mock scanner line -->
+                                <div class="absolute top-0 left-0 w-full h-0.5 bg-primary opacity-50 animate-[scan_2s_ease-in-out_infinite]"></div>
+                            </div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Bakong_Logo.svg/512px-Bakong_Logo.svg.png" alt="Bakong" class="h-4 object-contain opacity-80 filter grayscale dark:invert">
+                        </div>
+
+                        <!-- File Upload Area -->
+                        <div class="flex-grow w-full">
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wider flex justify-between">
+                                <span data-i18n="lbl_receipt">Upload Receipt (IMG/PDF) *</span>
+                                <span class="text-gray-400 flex items-center gap-1"><i class="ph-fill ph-lock-key text-xs"></i> Max 5MB</span>
+                            </label>
+                            
+                            <div class="file-drop-area border-2 border-dashed border-gray-300 dark:border-gray-600 p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-white dark:bg-[#1A1A1A] relative" id="dropArea">
+                                <div class="w-12 h-12 bg-gray-50 dark:bg-gray-800 rounded-full flex items-center justify-center mb-3 shadow-sm border border-gray-100 dark:border-gray-700">
+                                    <i class="ph-fill ph-cloud-arrow-up text-2xl text-primary"></i>
+                                </div>
+                                <p class="text-sm font-medium text-gray-700 dark:text-gray-300" id="fileDesc" data-i18n="lbl_dragdrop">
+                                    ចុចទីនេះ ឬទាញទម្លាក់ឯកសារ (Click or Drag & Drop)
+                                </p>
+                                <input type="file" id="receipt" accept="image/jpeg, image/png, application/pdf" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                            </div>
+                            
+                            <!-- Base64 Data Store -->
+                            <input type="hidden" id="receiptBase64">
+                            <input type="hidden" id="receiptMime">
+                            <input type="hidden" id="receiptName">
+                            <span class="error-msg text-primary text-xs mt-2 hidden font-medium flex items-center gap-1" id="fileError"><i class="ph-fill ph-warning-circle"></i> <span data-i18n="err_receipt">Please upload your payment receipt.</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Liability -->
+                <div class="mb-10">
+                    <h4 class="text-sm font-bold text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-wider border-b border-gray-200 dark:border-gray-800 pb-2 flex items-center gap-2">
+                        <i class="ph-fill ph-signature text-primary text-xl"></i> <span data-i18n="sec4_title">៤. ការយល់ព្រម | Agreement</span>
+                    </h4>
+                    
+                    <div class="space-y-4 bg-gray-50/50 dark:bg-black/20 p-5 rounded-custom border border-gray-100 dark:border-gray-800/50">
+                        <label class="flex items-start gap-4 cursor-pointer group">
+                            <input type="checkbox" id="agree1" required class="mt-0.5 shadow-sm">
+                            <span class="text-sm text-gray-700 dark:text-gray-300 leading-snug group-hover:text-black dark:group-hover:text-white transition-colors" data-i18n="agree_1">
+                                ខ្ញុំយល់ព្រមទទួលខុសត្រូវលើហានិភ័យរបួសដែលកើតមានអំឡុងពេលហ្វឹកហាត់។
+                            </span>
+                        </label>
+
+                        <label class="flex items-start gap-4 cursor-pointer group">
+                            <input type="checkbox" id="agree2" required class="mt-0.5 shadow-sm">
+                            <span class="text-sm text-gray-700 dark:text-gray-300 leading-snug group-hover:text-black dark:group-hover:text-white transition-colors" data-i18n="agree_2">
+                                ខ្ញុំបញ្ជាក់ថាខ្ញុំមានសុខភាពល្អ និងគ្មានរបួសរារាំងការហ្វឹកហាត់។
+                            </span>
+                        </label>
+
+                        <label class="flex items-start gap-4 cursor-pointer group">
+                            <input type="checkbox" id="agree3" required class="mt-0.5 shadow-sm">
+                            <span class="text-sm text-gray-700 dark:text-gray-300 leading-snug group-hover:text-black dark:group-hover:text-white transition-colors" data-i18n="agree_3">
+                                ខ្ញុំនឹងគោរពតាមការណែនាំរបស់គ្រូបង្វឹក និងឈប់ហ្វឹកហាត់បើមានអាការៈមិនស្រួល។
+                            </span>
+                        </label>
+
+                        <label class="flex items-start gap-4 cursor-pointer group">
+                            <input type="checkbox" id="agree4" required class="mt-0.5 shadow-sm">
+                            <span class="text-sm text-gray-700 dark:text-gray-300 leading-snug group-hover:text-black dark:group-hover:text-white transition-colors" data-i18n="agree_4">
+                                ខ្ញុំអនុញ្ញាតឱ្យ Infinity ថតរូប/វីដេអូ ដើម្បីប្រើប្រាស់ក្នុងការផ្សព្វផ្សាយ។
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit Action -->
+                <div class="pt-6 mt-8 border-t border-gray-100 dark:border-gray-800 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-xs text-gray-400 font-medium flex items-center gap-1">
+                        <i class="ph-fill ph-shield-check text-green-500 text-sm"></i> <span data-i18n="lbl_secured">Secured 256-bit encryption</span>
+                    </p>
+                    <button type="submit" id="submitBtn" disabled class="w-full md:w-auto min-w-[220px] bg-primary hover:bg-primaryDark text-white font-bold py-3.5 px-8 rounded-custom shadow-premium transition-all focus:outline-none flex justify-center items-center gap-2 group relative overflow-hidden">
+                        <!-- Button hover shine effect -->
+                        <div class="absolute inset-0 w-full h-full bg-white/20 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                        <span id="btnText" class="tracking-wide" data-i18n="btn_submit">ចុះឈ្មោះឥឡូវនេះ / Register Now</span>
+                        <i class="ph ph-arrow-right text-lg group-hover:translate-x-1 transition-transform" id="btnIcon"></i>
+                        <div id="btnLoader" class="loader hidden"></div>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center text-gray-400 dark:text-gray-600 text-sm font-medium">
+        <p>&copy; <span id="year"></span> Infinity Taekwondo. <span data-i18n="footer_slogan">Elevated Excellence.</span></p>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-md px-4 transition-opacity opacity-0">
+        <div class="bg-white dark:bg-cardDark p-8 rounded-custom max-w-sm w-full text-center shadow-premium-dark transform scale-95 transition-all duration-300" id="modalContent">
+            <div class="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner relative">
+                <i class="ph-bold ph-check text-4xl animate-[pulse_2s_infinite]"></i>
+                <div class="absolute inset-0 border-4 border-green-500 rounded-full border-t-transparent animate-spin opacity-20"></div>
+            </div>
+            <h3 class="text-2xl font-black mb-2 text-secondary dark:text-white" data-i18n="modal_success_title">Registration Confirmed!</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-8 text-sm leading-relaxed" data-i18n="modal_success_desc">យើងខ្ញុំបានទទួលទិន្នន័យរបស់អ្នកហើយ។</p>
+            <button id="closeModal" class="w-full bg-secondary hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 text-white py-3 rounded-custom font-bold transition-all shadow-md" data-i18n="btn_done">
+                Done
+            </button>
+        </div>
+    </div>
+
+    <!-- Tailwind Custom Animations Config inline style -->
+    <style>
+        @keyframes scan {
+            0% { top: 0; }
+            50% { top: 100%; }
+            100% { top: 0; }
+        }
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
+    </style>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- 1. State & Setup ---
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycb.../exec"; // Replace later
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        }
+        themeToggle.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            localStorage.theme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+        });
+
+        // Date constraints
+        const dobInput = document.getElementById('dob');
+        const today = new Date();
+        const maxDate = new Date(today.getFullYear() - 4, today.getMonth(), today.getDate());
+        dobInput.max = maxDate.toISOString().split("T")[0];
+
+        // Regex Patterns
+        const patterns = {
+            email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            phone: /^(0|\+855)[1-9]\d{7,8}$/
+        };
+
+        // --- 2. Multi-language Dictionary ---
+        const translations = {
+            km: {
+                badge_hub: "កម្មវិធីហ្វឹកហាត់ប្រចាំសប្តាហ៍",
+                title: "វេទិកាថ្ងៃចន្ទ",
+                subtitle: "The Monday Gathering",
+                intro: "សូមស្វាគមន៍មកកាន់ វេទិកាថ្ងៃចន្ទ! នេះគឺជាកម្មវិធីហ្វឹកហាត់បច្ចេកទេសតេក្វាន់ដូកម្រិតខ្ពស់ប្រចាំសប្តាហ៍ ផ្តោតលើ Poomsae, Demonstration, និង Tricking រៀបចំដោយ Infinity Taekwondo។ តោះមកចូលរួមជាមួយពួកយើង ដើម្បីស្វែងយល់ពីភាពល្អឥតខ្ចោះនៃសិល្បៈតេក្វាន់ដូទំនើបទាំងអស់គ្នា!",
+                sec1_title: "១. ព័ត៌មានផ្ទាល់ខ្លួន",
+                lbl_name_km: "ឈ្មោះពេញ ជាភាសាខ្មែរ *",
+                plh_name_km: "កែវ មុនី",
+                err_name_km: "សូមបញ្ចូលឈ្មោះជាភាសាខ្មែរ។",
+                lbl_name_en: "ឈ្មោះពេញ ជាភាសាអង់គ្លេស *",
+                plh_name_en: "Keo Moni",
+                err_name_en: "សូមបញ្ចូលឈ្មោះជាភាសាអង់គ្លេស។",
+                lbl_email: "អ៊ីមែល *",
+                err_email: "សូមបញ្ចូលអ៊ីមែលឲ្យបានត្រឹមត្រូវ។",
+                lbl_phone: "លេខទូរស័ព្ទ *",
+                plh_phone: "០១២ ៣៤៥ ៦៧៨",
+                err_phone: "សូមបញ្ចូលលេខទូរស័ព្ទឲ្យបានត្រឹមត្រូវ។",
+                lbl_dob: "ថ្ងៃខែឆ្នាំកំណើត *",
+                err_dob: "សូមជ្រើសរើសថ្ងៃខែឆ្នាំកំណើត (អាយុតិចបំផុត៤ឆ្នាំ)។",
+                sec2_title: "២. ព័ត៌មានតេក្វាន់ដូ",
+                lbl_club: "ក្លឹបបច្ចុប្បន្ន *",
+                plh_club: "ឧ. Infinity Taekwondo",
+                err_club: "សូមបញ្ចូលឈ្មោះក្លឹបរបស់អ្នក។",
+                lbl_telegram: "គណនី Telegram *",
+                lbl_telegram_hint: "(សម្រាប់បញ្ចូលក្នុងក្រុម)",
+                err_telegram: "សូមបញ្ចូលគណនី Telegram។",
+                badge_secure: "ទូទាត់សុវត្ថិភាព",
+                sec3_title: "៣. ការបង់ប្រាក់",
+                sec3_desc: "ថ្លៃចូលរួម៖ <strong class='text-primary'>៥,០០០ រៀល/អ្នក</strong>។ សូមស្កេន KHQR រួចបង្ហោះបង្កាន់ដៃ។",
+                lbl_receipt: "បង្ហោះបង្កាន់ដៃ (IMG/PDF) *",
+                lbl_dragdrop: "ចុចទីនេះ ឬទាញទម្លាក់ឯកសារ",
+                err_receipt: "សូមបង្ហោះរូបភាពបង្កាន់ដៃបង់ប្រាក់។",
+                sec4_title: "៤. ការយល់ព្រម",
+                agree_1: "ខ្ញុំយល់ព្រមទទួលខុសត្រូវលើហានិភ័យរបួសដែលកើតមានអំឡុងពេលហ្វឹកហាត់។",
+                agree_2: "ខ្ញុំបញ្ជាក់ថាខ្ញុំមានសុខភាពល្អ និងគ្មានរបួសរារាំងការហ្វឹកហាត់។",
+                agree_3: "ខ្ញុំនឹងគោរពតាមការណែនាំរបស់គ្រូបង្វឹក និងឈប់ហ្វឹកហាត់បើមានអាការៈមិនស្រួល។",
+                agree_4: "ខ្ញុំអនុញ្ញាតឱ្យ Infinity ថតរូប/វីដេអូ ដើម្បីប្រើប្រាស់ក្នុងការផ្សព្វផ្សាយ។",
+                lbl_secured: "សុវត្ថិភាពទិន្នន័យ 256-bit",
+                btn_submit: "ចុះឈ្មោះឥឡូវនេះ",
+                footer_slogan: "ភាពល្អឥតខ្ចោះនៃសិល្បៈការពារខ្លួន។",
+                modal_success_title: "ចុះឈ្មោះបានជោគជ័យ!",
+                modal_success_desc: "យើងខ្ញុំបានទទួលទិន្នន័យរបស់អ្នកហើយ។ ជួបគ្នានៅថ្ងៃហ្វឹកហាត់!",
+                btn_done: "រួចរាល់"
+            },
+            en: {
+                badge_hub: "Weekly Training Hub",
+                title: "The Monday Gathering",
+                subtitle: "Infinity Taekwondo Hub",
+                intro: "Welcome to The Monday Gathering! This is our weekly, high-performance Taekwondo technical training hub (Focusing on Poomsae, Demo, and Tricking), proudly hosted by Infinity Taekwondo. Join us and let’s push our limits together!",
+                sec1_title: "1. Personal Information",
+                lbl_name_km: "Full Name in Khmer *",
+                plh_name_km: "កែវ មុនី",
+                err_name_km: "Please enter your Khmer name.",
+                lbl_name_en: "Full Name in English *",
+                plh_name_en: "Keo Moni",
+                err_name_en: "Please enter your English name.",
+                lbl_email: "Email Address *",
+                err_email: "Please enter a valid email.",
+                lbl_phone: "Phone Number *",
+                plh_phone: "012 345 678",
+                err_phone: "Valid phone number required.",
+                lbl_dob: "Date of Birth *",
+                err_dob: "Please select a valid birth date (Min age 4).",
+                sec2_title: "2. Taekwondo Background",
+                lbl_club: "Current Club *",
+                plh_club: "e.g. Infinity Taekwondo",
+                err_club: "Please enter your club.",
+                lbl_telegram: "Telegram Username *",
+                lbl_telegram_hint: "(For Group Invite)",
+                err_telegram: "Please enter your Telegram username.",
+                badge_secure: "Secure Payment",
+                sec3_title: "3. Payment Verification",
+                sec3_desc: "Entry Fee: <strong class='text-primary'>5,000 KHR/person</strong>. Scan KHQR and upload receipt.",
+                lbl_receipt: "Upload Receipt (IMG/PDF) *",
+                lbl_dragdrop: "Click or Drag & Drop File",
+                err_receipt: "Please upload your payment receipt.",
+                sec4_title: "4. Liability Agreement",
+                agree_1: "I assume all risks of injury during training.",
+                agree_2: "I certify I am in good physical condition to train safely.",
+                agree_3: "I will follow coach instructions and stop if feeling unwell.",
+                agree_4: "I consent to media capture for promotional use.",
+                lbl_secured: "Secured 256-bit encryption",
+                btn_submit: "Register Now",
+                footer_slogan: "Elevated Excellence.",
+                modal_success_title: "Registration Confirmed!",
+                modal_success_desc: "Your data is securely submitted. See you on the mat!",
+                btn_done: "Done"
+            },
+            zh: {
+                badge_hub: "每周训练中心",
+                title: "周一聚会",
+                subtitle: "无限跆拳道",
+                intro: "欢迎参加周一聚会！这是我们每周的高级跆拳道技术训练中心（专注于品势、特技），由 Infinity Taekwondo 主办。加入我们，一起突破极限！",
+                sec1_title: "1. 个人信息",
+                lbl_name_km: "高棉语全名 *",
+                plh_name_km: "កែវ មុនី",
+                err_name_km: "请输入您的高棉语名字。",
+                lbl_name_en: "英语/中文全名 *",
+                plh_name_en: "陈跃龙 (Keo Moni)",
+                err_name_en: "请输入您的英语名字。",
+                lbl_email: "电子邮件 *",
+                err_email: "请输入有效的电子邮件。",
+                lbl_phone: "电话号码 *",
+                plh_phone: "012 345 678",
+                err_phone: "需要有效的电话号码。",
+                lbl_dob: "出生日期 *",
+                err_dob: "请选择有效的出生日期。",
+                sec2_title: "2. 跆拳道背景",
+                lbl_club: "当前俱乐部 *",
+                plh_club: "例如：Infinity Taekwondo",
+                err_club: "请输入您的俱乐部。",
+                lbl_telegram: "Telegram 用户名 *",
+                lbl_telegram_hint: "（用于邀请入群）",
+                err_telegram: "请输入您的 Telegram 用户名。",
+                badge_secure: "安全支付",
+                sec3_title: "3. 支付验证",
+                sec3_desc: "报名费：<strong class='text-primary'>5,000 瑞尔/人</strong>。请扫描 KHQR 并上传收据。",
+                lbl_receipt: "上传收据 (IMG/PDF) *",
+                lbl_dragdrop: "点击或拖放文件",
+                err_receipt: "请上传您的付款收据。",
+                sec4_title: "4. 责任免除协议",
+                agree_1: "我同意承担训练期间的所有受伤风险。",
+                agree_2: "我证明我身体健康，可以安全地进行训练。",
+                agree_3: "我将听从教练的指示，如果感到不适将停止训练。",
+                agree_4: "我同意用于宣传目的的媒体拍摄。",
+                lbl_secured: "256位加密安全",
+                btn_submit: "立即注册",
+                footer_slogan: "追求卓越。",
+                modal_success_title: "注册成功！",
+                modal_success_desc: "您的数据已安全提交。垫子上见！",
+                btn_done: "完成"
+            }
+        };
+
+        const langSelect = document.getElementById('langSelect');
+        const elementsToTranslate = document.querySelectorAll('[data-i18n]');
+        const inputsWithPlaceholder = document.querySelectorAll('[data-i18n-placeholder]');
+
+        function switchLanguage(lang) {
+            elementsToTranslate.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key]; // Using innerHTML to preserve strong tags in desc
+                }
+            });
+            inputsWithPlaceholder.forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang] && translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
+                }
+            });
+            document.documentElement.lang = lang;
+            
+            // Adjust Font logic
+            if(lang === 'en' || lang === 'zh') {
+                document.body.classList.remove('font-suwannaphum');
+                document.body.classList.add('font-montserrat');
+            } else {
+                document.body.classList.remove('font-montserrat');
+                document.body.classList.add('font-suwannaphum');
+            }
+        }
+
+        langSelect.addEventListener('change', (e) => switchLanguage(e.target.value));
+
+        const submitBtn = document.getElementById('submitBtn');
+        const textInputs = ['nameKh', 'nameEn', 'club', 'telegram'];
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        
+        function toggleValidationIcon(inputId, isValid) {
+            const icon = document.getElementById(`icon-${inputId}`);
+            const input = document.getElementById(inputId);
+            
+            if (!icon) return;
+            if (input.value.trim() === '') {
+                icon.classList.remove('show'); icon.classList.add('hide');
+                icon.className = icon.className.replace(/ph-check-circle|ph-x-circle|text-green-500|text-red-500/g, '') + ' ph-fill ph-check-circle text-green-500 validation-icon';
+                return;
+            }
+            icon.classList.remove('hide'); icon.classList.add('show');
+            if (isValid) {
+                icon.classList.remove('ph-x-circle', 'text-red-500'); icon.classList.add('ph-check-circle', 'text-green-500');
+                input.style.borderColor = ''; 
+            } else {
+                icon.classList.remove('ph-check-circle', 'text-green-500'); icon.classList.add('ph-x-circle', 'text-red-500');
+                input.style.borderColor = '#E53935'; 
+            }
+        }
+
+        function checkOverallValidity() {
+            const isNameKhValid = document.getElementById('nameKh').value.trim().length > 1;
+            const isNameEnValid = document.getElementById('nameEn').value.trim().length > 1;
+            const isEmailValid = patterns.email.test(emailInput.value.trim());
+            const isPhoneValid = patterns.phone.test(phoneInput.value.replace(/\s/g, ''));
+            const isDobValid = dobInput.value !== '';
+            const isClubValid = document.getElementById('club').value.trim().length > 1;
+            const isTelegramValid = document.getElementById('telegram').value.trim().length > 1;
+            const isReceiptValid = document.getElementById('receiptBase64').value !== '';
+            
+            const checks = ['agree1', 'agree2', 'agree3', 'agree4'];
+            const allChecked = checks.every(id => document.getElementById(id).checked);
+
+            const isFormValid = isNameKhValid && isNameEnValid && isEmailValid && isPhoneValid && 
+                              isDobValid && isClubValid && isTelegramValid && isReceiptValid && allChecked;
+
+            if (isFormValid) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        // Attach event listeners for real-time validation check
+        const allFormInputs = document.querySelectorAll('input');
+        allFormInputs.forEach(input => {
+            input.addEventListener('input', checkOverallValidity);
+            input.addEventListener('change', checkOverallValidity);
+        });
+
+        // Specific Input Handlers (Formatting & Icons)
+        textInputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[<>]/g, ''); // Basic sanitize
+                toggleValidationIcon(id, e.target.value.trim().length > 1);
+            });
+        });
+
+        emailInput.addEventListener('input', (e) => toggleValidationIcon('email', patterns.email.test(e.target.value.trim())));
+        
+        phoneInput.addEventListener('input', (e) => {
+            let rawVal = e.target.value.replace(/[^0-9+\s]/g, '');
+            e.target.value = rawVal;
+            toggleValidationIcon('phone', patterns.phone.test(rawVal.replace(/\s/g, '')));
+        });
+
+        const fileInput = document.getElementById('receipt');
+        const dropArea = document.getElementById('dropArea');
+        const fileDesc = document.getElementById('fileDesc');
+        const b64Store = document.getElementById('receiptBase64');
+        const mimeStore = document.getElementById('receiptMime');
+        const nameStore = document.getElementById('receiptName');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eName => {
+            dropArea.addEventListener(eName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
+        ['dragenter', 'dragover'].forEach(eName => dropArea.addEventListener(eName, () => dropArea.classList.add('dragover'), false));
+        ['dragleave', 'drop'].forEach(eName => dropArea.addEventListener(eName, () => dropArea.classList.remove('dragover'), false));
+
+        dropArea.addEventListener('drop', e => handleFiles(e.dataTransfer.files), false);
+        fileInput.addEventListener('change', function() { handleFiles(this.files); });
+
+        function handleFiles(files) {
+            if (files.length === 0) return;
+            const file = files[0];
+            const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+            
+            if (!validTypes.includes(file.type) || file.size > MAX_FILE_SIZE) {
+                alert(file.size > MAX_FILE_SIZE ? "File too large. Max 5MB." : "Invalid format. Use JPG, PNG, or PDF.");
+                fileInput.value = ''; b64Store.value = '';
+                checkOverallValidity();
+                return;
+            }
+
+            dropArea.style.borderColor = '#10B981';
+            dropArea.style.background = 'rgba(16, 185, 129, 0.05)';
+            fileDesc.innerHTML = `<span class="text-green-600 dark:text-green-400 font-bold flex items-center justify-center gap-1"><i class="ph-fill ph-check-circle"></i> ${file.name}</span><span class="text-xs text-gray-400 block mt-1">(${(file.size/1024/1024).toFixed(2)} MB)</span>`;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                b64Store.value = e.target.result.split(',')[1];
+                mimeStore.value = file.type;
+                nameStore.value = file.name;
+                checkOverallValidity(); // Recheck form validity after file load
+            };
+            reader.readAsDataURL(file);
+        }
+
+        const form = document.getElementById('registrationForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (submitBtn.disabled) return;
+
+            const btnText = document.getElementById('btnText');
+            const btnIcon = document.getElementById('btnIcon');
+            const btnLoader = document.getElementById('btnLoader');
+            
+            submitBtn.disabled = true;
+            btnText.textContent = "Processing...";
+            btnIcon.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+
+            const formData = {
+                nameKh: document.getElementById('nameKh').value.trim(),
+                nameEn: document.getElementById('nameEn').value.trim(),
+                email: emailInput.value.trim(),
+                phone: phoneInput.value.trim(),
+                dob: dobInput.value,
+                club: document.getElementById('club').value.trim(),
+                telegram: document.getElementById('telegram').value.trim(),
+                timestamp: new Date().toISOString(),
+                receipt: { base64: b64Store.value, mimeType: mimeStore.value, fileName: nameStore.value }
+            };
+
+            try {
+                await fetch(GAS_API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(formData)
+                });
+
+                const modal = document.getElementById('successModal');
+                const modalContent = document.getElementById('modalContent');
+                modal.classList.remove('hidden'); modal.classList.add('flex');
+                
+                requestAnimationFrame(() => {
+                    modal.classList.remove('opacity-0'); modal.classList.add('opacity-100');
+                    modalContent.classList.remove('scale-95'); modalContent.classList.add('scale-100');
+                });
+                
+                form.reset();
+                dropArea.style.borderColor = ''; dropArea.style.background = '';
+                fileDesc.innerHTML = `<span data-i18n="lbl_dragdrop">${translations[document.documentElement.lang].lbl_dragdrop}</span>`;
+                b64Store.value = '';
+                document.querySelectorAll('.validation-icon').forEach(icon => { icon.classList.remove('show'); icon.classList.add('hide'); });
+                checkOverallValidity();
+
+            } catch (error) {
+                alert("Network Security Error. Please try again.");
+            } finally {
+                btnText.textContent = translations[document.documentElement.lang].btn_submit;
+                btnIcon.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
+                // checkOverallValidity will re-enable or disable correctly based on reset form
+                checkOverallValidity(); 
+            }
+        });
+
+        document.getElementById('closeModal').addEventListener('click', () => {
+            const modal = document.getElementById('successModal');
+            const modalContent = document.getElementById('modalContent');
+            modal.classList.remove('opacity-100'); modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100'); modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden'); modal.classList.remove('flex');
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }, 300);
+        });
+        
+        // Initial check on load just in case browsers autofill
+        setTimeout(checkOverallValidity, 500);
+
+    </script>
+</body>
+</html>

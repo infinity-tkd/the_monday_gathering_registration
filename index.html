@@ -496,6 +496,12 @@
                     fileDesc.innerHTML = document.documentElement.lang === 'km' ? "ចុចទីនេះ ឬទាញទម្លាក់ឯកសារ" : "Click or Drag & Drop File Here";
                     b64Store.value = ''; 
                     document.querySelectorAll('.validation-icon').forEach(icon => { icon.classList.remove('show'); icon.classList.add('hide'); });
+
+                    // Redirect to Contact Page after 1 second (1000 milliseconds)
+                    setTimeout(() => {
+                        window.location.href = "https://infinity-tkd.github.io/contact-page/";
+                    }, 1000);
+
                 } else {
                     // Google sheet executed but returned an error! (e.g. wrong permissions)
                     throw new Error(result.message || "Database rejected the submission.");
